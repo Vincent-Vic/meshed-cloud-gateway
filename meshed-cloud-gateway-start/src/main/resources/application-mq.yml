@@ -1,0 +1,11 @@
+#spring:
+#  cloud:
+#    stream:
+#      bindings:
+#        eventName:
+#          destination: topic
+#        beanName-in-0:
+#          destination: topic
+#          group: group
+#      function:
+#        definition: beanName;beanName2
