@@ -16,6 +16,8 @@
     <modules>
         <module>meshed-cloud-gateway-core</module>
         <module>meshed-cloud-gateway-start</module>
+        <module>meshed-cloud-gateway-security</module>
+        <module>meshed-cloud-gateway-common</module>
     </modules>
 
     <properties>
@@ -27,7 +29,17 @@
         <dependencies>
             <dependency>
                 <groupId>cn.meshed.cloud.gateway</groupId>
+                <artifactId>meshed-cloud-gateway-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.meshed.cloud.gateway</groupId>
                 <artifactId>meshed-cloud-gateway-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.meshed.cloud.gateway</groupId>
+                <artifactId>meshed-cloud-gateway-security</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
