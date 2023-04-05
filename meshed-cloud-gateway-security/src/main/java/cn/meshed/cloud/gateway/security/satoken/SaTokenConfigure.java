@@ -7,6 +7,8 @@ import cn.dev33.satoken.reactor.filter.SaReactorFilter;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.meshed.cloud.gateway.security.permission.PermissionService;
+import cn.meshed.cloud.iam.rbac.data.IdentityAuthenticationDTO;
+import cn.meshed.cloud.iam.rbac.enums.AccessModeEnum;
 import com.alibaba.cola.dto.Response;
 import com.alibaba.fastjson.JSONObject;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +21,10 @@ import cn.dev33.satoken.router.SaHttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ServerWebExchange;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -38,8 +42,13 @@ public class SaTokenConfigure {
     // 注册 Sa-Token全局过滤器
     @Bean
     public SaReactorFilter getSaReactorFilter() {
-        Map<String, String> permissionMap = permissionService.getPermissionMap();
-        List<String> anonymousUrls = permissionService.getAnonymousUrls();
+        List<IdentityAuthenticationDTO> identityAuthentications = permissionService.getIdentityAuthentications();
+        List<String> anonymousUrls = identityAuthentications.stream()
+                .filter(identity -> AccessModeEnum.ANONYMOUS.equals(identity.getAccessMode()))
+                .map(IdentityAuthenticationDTO::getUri).collect(Collectors.toList());
+        Map<String, String> permissionMap = identityAuthentications.stream()
+                .filter(identity -> AccessModeEnum.EMPOWER.equals(identity.getAccessMode()))
+                .collect(Collectors.toMap(IdentityAuthenticationDTO::getUri, IdentityAuthenticationDTO::getAccess));
 
         return new SaReactorFilter()
                 // 拦截地址

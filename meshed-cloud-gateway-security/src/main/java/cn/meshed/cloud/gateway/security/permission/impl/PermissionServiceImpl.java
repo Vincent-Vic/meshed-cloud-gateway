@@ -1,10 +1,18 @@
 package cn.meshed.cloud.gateway.security.permission.impl;
 
 import cn.meshed.cloud.gateway.security.permission.PermissionService;
+import cn.meshed.cloud.iam.account.UserRpc;
+import cn.meshed.cloud.iam.account.query.GrantedAuthorityQry;
+import cn.meshed.cloud.iam.rbac.PermissionRpc;
+import cn.meshed.cloud.iam.rbac.data.IdentityAuthenticationDTO;
+import com.alibaba.cola.dto.MultiResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,29 +26,26 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Service
 public class PermissionServiceImpl implements PermissionService {
+
+    @DubboReference
+    private UserRpc userRpc;
+
+    @DubboReference
+    private PermissionRpc permissionRpc;
+
     /**
      * 鉴权MAP
      *
      * @return 权限MAP
      */
     @Override
-    public Map<String, String> getPermissionMap() {
-        Map<String,String> permissionMap = new HashMap<>();
-        System.out.println("getPermissionMap");
-
-        permissionMap.put("/iam/account/list","iam:account:list");
-        permissionMap.put("/iam/role/list","iam:account:role");
-        return permissionMap;
-    }
-
-    /**
-     * 匿名URL
-     *
-     * @return 匿名URL
-     */
-    @Override
-    public List<String> getAnonymousUrls() {
-        return Arrays.asList("/iam/system/list");
+    public List<IdentityAuthenticationDTO> getIdentityAuthentications() {
+        MultiResponse<IdentityAuthenticationDTO> identityAuthentications = permissionRpc.getIdentityAuthentications();
+        System.out.println("getIdentityAuthentications");
+        if (identityAuthentications.isSuccess()) {
+            return identityAuthentications.getData();
+        }
+        return Collections.emptyList();
     }
 
     /**
@@ -51,8 +56,14 @@ public class PermissionServiceImpl implements PermissionService {
      * @return 该账号id具有的权限码集合
      */
     @Override
-    public List<String> getPermissionList(Object loginId, String loginType) {
-        return Arrays.asList("iam:account:list");
+    public List<String> getPermissionList(Long loginId, String loginType) {
+        GrantedAuthorityQry grantedAuthorityQry = new GrantedAuthorityQry();
+        grantedAuthorityQry.setAccountId(loginId);
+        MultiResponse<String> userGrantedAuthority = userRpc.getUserGrantedAuthority(grantedAuthorityQry);
+        if (userGrantedAuthority.isSuccess()){
+            return userGrantedAuthority.getData();
+        }
+        return Collections.emptyList();
     }
 
     /**
@@ -63,7 +74,13 @@ public class PermissionServiceImpl implements PermissionService {
      * @return 该账号id具有的角色标识集合
      */
     @Override
-    public List<String> getRoleList(Object loginId, String loginType) {
-        return Arrays.asList("admin");
+    public List<String> getRoleList(Long loginId, String loginType) {
+        GrantedAuthorityQry grantedAuthorityQry = new GrantedAuthorityQry();
+        grantedAuthorityQry.setAccountId(loginId);
+        MultiResponse<String> userGrantedRole = userRpc.getUserGrantedRole(grantedAuthorityQry);
+        if (userGrantedRole.isSuccess()) {
+            return userGrantedRole.getData();
+        }
+        return Collections.emptyList();
     }
 }

@@ -1,5 +1,8 @@
 package cn.meshed.cloud.gateway.security.permission;
 
+import cn.meshed.cloud.iam.rbac.data.IdentityAuthenticationDTO;
+import com.alibaba.cola.dto.MultiResponse;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,13 +18,7 @@ public interface PermissionService {
      * 鉴权MAP
      * @return 权限MAP
      */
-    Map<String,String> getPermissionMap();
-
-    /**
-     * 匿名URL
-     * @return 匿名URL
-     */
-    List<String> getAnonymousUrls();
+    List<IdentityAuthenticationDTO> getIdentityAuthentications();
 
     /**
      * 返回指定账号id所拥有的权限码集合
@@ -30,7 +27,7 @@ public interface PermissionService {
      * @param loginType 账号类型
      * @return 该账号id具有的权限码集合
      */
-    List<String> getPermissionList(Object loginId, String loginType);
+    List<String> getPermissionList(Long loginId, String loginType);
 
     /**
      * 返回指定账号id所拥有的角色标识集合
@@ -39,5 +36,5 @@ public interface PermissionService {
      * @param loginType 账号类型
      * @return 该账号id具有的角色标识集合
      */
-    List<String> getRoleList(Object loginId, String loginType);
+    List<String> getRoleList(Long loginId, String loginType);
 }

@@ -32,13 +32,13 @@ public class StpInterfaceImpl implements StpInterface {
     public List<String> getPermissionList(Object loginId, String loginType) {
         System.out.println(loginType);
         // 返回此 loginId 拥有的权限列表
-        return permissionService.getPermissionList(loginId, loginType);
+        return permissionService.getPermissionList(Long.parseLong(String.valueOf(loginId)), loginType);
     }
 
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
         // 返回此 loginId 拥有的角色列表
-        return permissionService.getRoleList(loginId, loginType);
+        return permissionService.getRoleList(Long.parseLong(String.valueOf(loginId)), loginType);
     }
 
 }

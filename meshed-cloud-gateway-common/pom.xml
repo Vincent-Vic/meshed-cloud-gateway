@@ -47,6 +47,10 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.83</version>
         </dependency>
+        <dependency>
+            <groupId>cn.meshed.cloud</groupId>
+            <artifactId>meshed-cloud-dubbo-starter</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

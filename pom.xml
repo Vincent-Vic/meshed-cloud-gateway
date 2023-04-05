@@ -23,6 +23,8 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <meshed-cloud-dubbo-starter.version>1.0.0-SNAPSHOT</meshed-cloud-dubbo-starter.version>
+        <meshed-cloud-iam-client.version>1.0.0-SNAPSHOT</meshed-cloud-iam-client.version>
     </properties>
 
     <dependencyManagement>
@@ -41,6 +43,16 @@
                 <groupId>cn.meshed.cloud.gateway</groupId>
                 <artifactId>meshed-cloud-gateway-security</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.meshed.cloud</groupId>
+                <artifactId>meshed-cloud-dubbo-starter</artifactId>
+                <version>${meshed-cloud-dubbo-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.meshed.cloud.iam</groupId>
+                <artifactId>meshed-cloud-iam-client</artifactId>
+                <version>${meshed-cloud-iam-client.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

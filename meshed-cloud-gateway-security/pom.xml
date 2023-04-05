@@ -53,6 +53,10 @@
             <groupId>cn.meshed.cloud.gateway</groupId>
             <artifactId>meshed-cloud-gateway-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.meshed.cloud.iam</groupId>
+            <artifactId>meshed-cloud-iam-client</artifactId>
+        </dependency>
 
     </dependencies>
 
