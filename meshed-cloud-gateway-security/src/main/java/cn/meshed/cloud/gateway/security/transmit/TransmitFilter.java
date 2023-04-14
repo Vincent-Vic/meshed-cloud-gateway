@@ -2,6 +2,9 @@ package cn.meshed.cloud.gateway.security.transmit;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.meshed.cloud.gateway.constant.GatewayConstant;
+import cn.meshed.cloud.security.AccessTokenService;
+import com.alibaba.fastjson.JSONObject;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -12,28 +15,38 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.HashMap;
+
 /**
  * <h1>向微服务传递数据</h1>
  *
  * @author Vincent Vic
  * @version 1.0
  */
+@RequiredArgsConstructor
 @Slf4j
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class TransmitFilter implements GlobalFilter, Ordered {
 
+    private final AccessTokenService accessTokenService;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        ServerWebExchange mutableExchange = exchange.mutate().build();
+        String payloadStr = null;
         if (StpUtil.isLogin()){
-            ServerHttpRequest mutableReq = exchange.getRequest().mutate()
-                    .header(GatewayConstant.LOGIN_ID, (String) StpUtil.getLoginId())
-                    .build();
-            mutableExchange = exchange.mutate().request(mutableReq).build();
+            //签发用户信息安全口令
+            payloadStr = JSONObject.toJSONString(StpUtil.getSession().get("user"));
+        } else {
+            //签发无信息安全口令
+            payloadStr = JSONObject.toJSONString(new HashMap<>());
         }
 
+        //传递信息
+        ServerHttpRequest mutableReq = exchange.getRequest().mutate()
+                .header(GatewayConstant.SIGN, accessTokenService.generateToken(payloadStr)) //签名含登入信息
+                .build();
+        ServerWebExchange mutableExchange = exchange.mutate().request(mutableReq).build();
         return chain.filter(mutableExchange);
     }
 

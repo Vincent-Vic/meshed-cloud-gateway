@@ -11,14 +11,12 @@ spring:
   cloud:
     nacos:
       discovery:
-#        locator:
-#          enabled: true #开启注册中心路由功能
         enabled: true
         server-addr: ${NACOS_HOST:localhost}:${NACOS_PORT:8848}
         namespace: meshed-cloud
         metadata:
           management:
-            context-path: ${server.servlet.context-path}/actuator
+            context-path: /actuator
       #服务配置
       config:
         enabled: true
@@ -57,4 +55,4 @@ spring:
 
 dubbo:
   application:
-    name: iam-dubbo
+    name: gateway-dubbo

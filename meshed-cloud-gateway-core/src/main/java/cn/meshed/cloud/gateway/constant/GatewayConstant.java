@@ -14,6 +14,9 @@ public interface GatewayConstant {
     /** 客户端设备 */
     String DEVICE_TYPE = "deviceType";
 
+    /** 签名 */
+    String SIGN = "sign";
+
     /** 登入ID */
     String LOGIN_ID = "loginId";
 

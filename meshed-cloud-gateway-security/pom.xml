@@ -54,6 +54,11 @@
             <artifactId>meshed-cloud-gateway-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>cn.meshed.cloud</groupId>
+            <artifactId>meshed-cloud-security-starter</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>cn.meshed.cloud.iam</groupId>
             <artifactId>meshed-cloud-iam-client</artifactId>
         </dependency>

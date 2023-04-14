@@ -12,8 +12,6 @@ import cn.meshed.cloud.gateway.security.permission.PermissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,7 +28,6 @@ public class StpInterfaceImpl implements StpInterface {
 
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
-        System.out.println(loginType);
         // 返回此 loginId 拥有的权限列表
         return permissionService.getPermissionList(Long.parseLong(String.valueOf(loginId)), loginType);
     }
