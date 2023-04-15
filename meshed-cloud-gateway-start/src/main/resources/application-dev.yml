@@ -7,19 +7,14 @@ spring:
           uri: lb://iam-service
           predicates:
             - Path=/iam/**
-
         - id: rd
           uri: lb://rd-service
           predicates:
             - Path=/rd/**
-          filters:
-            - PrefixPath=/rd
         - id: workflow
           uri: lb://workflow-service
           predicates:
             - Path=/workflow/**
-          filters:
-            - PrefixPath=/workflow
 
 
 logging:
