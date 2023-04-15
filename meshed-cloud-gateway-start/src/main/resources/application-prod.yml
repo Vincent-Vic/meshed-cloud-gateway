@@ -5,3 +5,24 @@ spring:
       discovery:
         # 注册IP复用dubbo vm参数
         ip: ${DUBBO_IP_TO_REGISTRY:}
+    gateway:
+      routes:
+        - id: iam
+          uri: lb://iam-service
+          predicates:
+            - Path=/iam/**
+        - id: rd
+          uri: lb://rd-service
+          predicates:
+            - Path=/rd/**
+        - id: workflow
+          uri: lb://workflow-service
+          predicates:
+            - Path=/workflow/**
+
+
+logging:
+  level:
+    org.springframework.cloud.gateway: trace
+    org.springframework.cloud.loadbalancer: trace
+    org.springframework.web.reactive: trace
