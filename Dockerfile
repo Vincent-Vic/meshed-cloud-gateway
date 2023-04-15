@@ -9,7 +9,7 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 VOLUME /tmp/gateway
 
 #应用构建成功后的jar文件被复制到镜像内，名字也改成了app.jar
-ADD start/target/*.jar app.jar
+ADD meshed-cloud-gateway-start/target/*.jar app.jar
 #设置变量 JAVA_OPTS
 ENV JAVA_OPTS=""
 
