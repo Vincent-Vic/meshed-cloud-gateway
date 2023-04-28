@@ -55,7 +55,7 @@ public class SaTokenConfigure {
                 // 拦截地址
                 .addInclude("/**")
                 // 开放地址
-                .addExclude("/favicon.ico","/iam/login/**","/iam/oauth2/**")
+                .addExclude("/favicon.ico","/iam/login/**","/iam/oauth2/**","/actuator/","/actuator/**")
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {
                     System.out.println("xxx");
