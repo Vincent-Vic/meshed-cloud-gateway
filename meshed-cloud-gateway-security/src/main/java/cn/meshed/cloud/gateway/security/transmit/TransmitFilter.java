@@ -1,11 +1,13 @@
 package cn.meshed.cloud.gateway.security.transmit;
 
 import cn.dev33.satoken.stp.StpUtil;
+import cn.meshed.cloud.exception.security.SysSecurityException;
 import cn.meshed.cloud.gateway.constant.GatewayConstant;
 import cn.meshed.cloud.security.AccessTokenService;
 import com.alibaba.fastjson.JSONObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -41,10 +43,13 @@ public class TransmitFilter implements GlobalFilter, Ordered {
             //签发无信息安全口令
             payloadStr = JSONObject.toJSONString(new HashMap<>());
         }
-
+        String sign = accessTokenService.generateToken(payloadStr);
+        if (StringUtils.isBlank(sign)){
+            throw new SysSecurityException("颁发签名失败");
+        }
         //传递信息
         ServerHttpRequest mutableReq = exchange.getRequest().mutate()
-                .header(GatewayConstant.SIGN, accessTokenService.generateToken(payloadStr)) //签名含登入信息
+                .header(GatewayConstant.SIGN, sign) //签名含登入信息
                 .build();
         ServerWebExchange mutableExchange = exchange.mutate().request(mutableReq).build();
         return chain.filter(mutableExchange);

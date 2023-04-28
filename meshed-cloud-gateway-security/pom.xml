@@ -46,10 +46,6 @@
             <version>3.1.0</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-pool2</artifactId>
-        </dependency>
-        <dependency>
             <groupId>cn.meshed.cloud.gateway</groupId>
             <artifactId>meshed-cloud-gateway-core</artifactId>
         </dependency>

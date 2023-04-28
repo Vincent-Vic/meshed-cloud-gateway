@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.reactor.context.SaReactorSyncHolder;
 import cn.dev33.satoken.router.SaHttpMethod;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -72,22 +73,26 @@ public class SaTokenConfigure {
                     // 设置错误返回格式为JSON
                     ServerWebExchange exchange = SaReactorSyncHolder.getContext();
                     exchange.getResponse().getHeaders().set("Content-Type", "application/json; charset=utf-8");
-//                    return new ResultJsonUtil().fail(e.getMessage());
-//                    return SaResult.error(e.getMessage());
                     e.printStackTrace();
                     //未登入401，无权限403
-                    exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
+
                     if (e instanceof NotLoginException){
                         exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                         return JSONObject.toJSONString(Response.buildFailure("NOT_LOGIN",e.getMessage()));
                     }
                     if (e instanceof NotPermissionException){
+                        exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
                         return JSONObject.toJSONString(Response.buildFailure("NOT_PERMISSION",e.getMessage()));
                     }
                     if (e instanceof NotRoleException){
-                        return JSONObject.toJSONString(Response.buildFailure("NotRole",e.getMessage()));
+                        exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
+                        return JSONObject.toJSONString(Response.buildFailure("NOT_ROLE",e.getMessage()));
                     }
-                    return JSONObject.toJSONString(Response.buildFailure("UNAUTHORIZED",e.getMessage()));
+                    exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+                    if (e instanceof RedisConnectionFailureException) {
+                        return JSONObject.toJSONString(Response.buildFailure("INTERNAL_SERVER_ERROR",e.getMessage()));
+                    }
+                    return JSONObject.toJSONString(Response.buildFailure("FORBIDDEN",e.getMessage()));
                 })
                 .setBeforeAuth(obj -> {
                     // ---------- 设置跨域响应头 ----------
