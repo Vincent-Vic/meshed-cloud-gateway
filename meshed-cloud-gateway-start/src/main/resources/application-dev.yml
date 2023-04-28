@@ -1,4 +1,3 @@
-
 spring:
   cloud:
     gateway:
@@ -15,6 +14,10 @@ spring:
           uri: lb://workflow-service
           predicates:
             - Path=/workflow/**
+        - id: monitor
+          uri: lb://monitor-admin
+          predicates:
+            - Path=/monitor/**
 
 
 logging:
