@@ -51,8 +51,7 @@
         </dependency>
         <dependency>
             <groupId>cn.meshed.cloud</groupId>
-            <artifactId>meshed-cloud-security-starter</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <artifactId>meshed-cloud-security-token-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>cn.meshed.cloud.iam</groupId>
